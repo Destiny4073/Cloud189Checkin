@@ -1,4 +1,5 @@
 /* eslint-disable no-await-in-loop */
+require('dotenv').config()
 const log4js = require("log4js");
 const recording = require("log4js/lib/appenders/recording");
 log4js.configure({
@@ -199,7 +200,7 @@ async function main() {
     const account = accounts[index];
     const { userName, password } = account;
     if (userName && password) {
-      const userNameInfo = mask(userName, 3, 7);
+      const userNameInfo = mask(userName, 1, 10);
       try {
         logger.log(`账户 ${userNameInfo}开始执行`);
         const cloudClient = new CloudClient(userName, password);
@@ -226,7 +227,7 @@ async function main() {
         );
       } catch (e) {
         logger.error(e);
-        if (e.code === "ECONNRESET") {
+        if (e.code === "ETIMEDOUT") {
           throw e;
         }
       } finally {
